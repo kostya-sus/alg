@@ -33,8 +33,8 @@ namespace text_spacing
             string text = "catsanddog";
             string dictionaryPath = "../../../../../../dict_en.txt";
 
-            ITextParser trieParser = new TrieTextParser();
-            ITextParser backtraceParser = new BruteForceTextParser();
+            TextParser trieParser = new TrieTextParser();
+            TextParser backtraceParser = new BruteForceTextParser();
 
             Print("Testing TrieTextParser on small dictionary", ConsoleColor.Cyan);
             trieParser.SetDictionary(dictionary);

@@ -7,16 +7,11 @@ using System.Threading.Tasks;
 
 namespace text_spacing
 {
-    class TrieTextParser : ITextParser
+    class TrieTextParser : TextParser
     {
         private Trie _trie;
 
-        public void ReadDictionary(string path)
-        {
-            SetDictionary(File.ReadAllLines(path));
-        }
-
-        public void SetDictionary(string[] dictionary)
+        public override void SetDictionary(string[] dictionary)
         {
             _trie = new Trie();
             foreach (var word in dictionary)
@@ -25,42 +20,7 @@ namespace text_spacing
             }
         }
 
-        public IEnumerable<string> SplitText(string textWithoutSpaces)
-        {
-            var validPrefixesList = GetValidPrefixesList(textWithoutSpaces);
-
-            return GetSplittedSequenes(textWithoutSpaces,validPrefixesList);
-        }
-
-        private IEnumerable<string> GetSplittedSequenes(string textWithoutSpaces, IEnumerable<string> validPrefixesList)
-        {
-            var splittedSequences = new List<string>();
-            foreach (var prefix in validPrefixesList)
-            {
-                int len = prefix.Length;
-                string suffix = textWithoutSpaces.Substring(len);
-                if (len == textWithoutSpaces.Length)
-                {
-                    splittedSequences.Add(prefix);
-                }
-                else
-                {
-                    ConcatPrefixWithSubsequences(prefix, suffix, splittedSequences);
-                }
-            }
-
-            return splittedSequences;
-        }
-        private void ConcatPrefixWithSubsequences(string prefix, string suffix, IList<string> validWordsList)
-        {
-            var validWordsSequencesForSuffix = SplitText(suffix);
-            foreach (var wordsSequence in validWordsSequencesForSuffix)
-            {
-                validWordsList.Add(string.Format("{0} {1}", prefix, wordsSequence));
-            }
-        }
-
-        private List<string> GetValidPrefixesList(string text)
+        protected override List<string> GetValidPrefixesList(string text)
         {
             var validPrefixesList = new List<string>();
 
