@@ -34,18 +34,18 @@ namespace text_spacing
             string dictionaryPath = "../../../../../../dict_en.txt";
 
             ITextParser trieParser = new TrieTextParser();
-            ITextParser backtraceParser = new BacktraceTextParser();
+            ITextParser backtraceParser = new BruteForceTextParser();
 
             Print("Testing TrieTextParser on small dictionary", ConsoleColor.Cyan);
             trieParser.SetDictionary(dictionary);
             Print(trieParser.SplitText(text));
-            Print("Testing BacktraceTextParser on small dictionary", ConsoleColor.Cyan);
+            Print("Testing BruteForceTextParser on small dictionary", ConsoleColor.Cyan);
             trieParser.SetDictionary(dictionary);
             Print(trieParser.SplitText(text));
 
             var stopwatch = new Stopwatch();
 
-            Print("Testing BacktraceTextParser on large dictionary", ConsoleColor.Cyan);
+            Print("Testing BruteForceTextParser on large dictionary", ConsoleColor.Cyan);
             stopwatch.Start();
             backtraceParser.ReadDictionary(dictionaryPath);
             stopwatch.Stop();
@@ -75,7 +75,7 @@ namespace text_spacing
             if (answer == "view")
             {
                 var list = backtraceResults.ToList();
-                Print(string.Format("Results for BacktraceTextParser({0} results): ", list.Count()), ConsoleColor.DarkCyan);
+                Print(string.Format("Results for BruteForceTextParser({0} results): ", list.Count()), ConsoleColor.DarkCyan);
                 Print(list);
                 list = trieResults.ToList();
                 Print(string.Format("Results for TrieTextParser({0} results): ", list.Count()), ConsoleColor.DarkCyan);
