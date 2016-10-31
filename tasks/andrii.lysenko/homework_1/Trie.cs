@@ -6,7 +6,7 @@
 
         public Trie()
         {
-            _root = new TrieNode {IsLeaf = false, Key = ""};
+            _root = new TrieNode {IsWord = false, Key = ""};
         }
 
         public void Add(string key)
@@ -29,7 +29,7 @@
                 {
                     if (KeyIsLastSymbol(key))
                     {
-                        return child.IsLeaf ? NodeExistance.IsWord : NodeExistance.IsTransit;
+                        return child.IsWord ? NodeExistance.IsWord : NodeExistance.IsTransit;
                     }
                     return Contains(child, rest);
                 }
@@ -49,7 +49,7 @@
                 {
                     if (KeyIsLastSymbol(key))
                     {
-                        child.IsLeaf = true;
+                        child.IsWord = true;
                         return;
                     }
                     Add(child, rest);
@@ -57,7 +57,7 @@
                 }
             }
 
-            var newNode = new TrieNode {IsLeaf = KeyIsLastSymbol(key), Key = symbol};
+            var newNode = new TrieNode {IsWord = KeyIsLastSymbol(key), Key = symbol};
             node.AddChild(newNode);
             if (KeyIsLastSymbol(key))
             {
