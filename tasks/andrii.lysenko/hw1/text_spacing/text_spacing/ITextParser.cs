@@ -6,6 +6,6 @@ namespace text_spacing
     {
         void ReadDictionary(string path);
         void SetDictionary(string[] dictionary);
-        IEnumerable<string> SplitText(string text);
+        IEnumerable<string> SplitText(string textWithoutSpaces);
     }
 }

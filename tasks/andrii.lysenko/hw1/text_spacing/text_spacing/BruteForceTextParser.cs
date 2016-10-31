@@ -21,40 +21,54 @@ namespace text_spacing
             _dictionary = dictionary;
         }
 
-        public IEnumerable<string> SplitText(string text)
+        public IEnumerable<string> SplitText(string textWithoutSpaces)
         {
-            if (string.IsNullOrEmpty(text)) return new List<string> {""};
-            var subtexts = new List<string>();
+            var validPrefixesList = GetValidPrefixesList(textWithoutSpaces);
 
-            var substrings = new List<string>();
-            for (int i = 1; i <= text.Length; i++)
-            {
-                string prefix = text.Substring(0, i);
-                if (_dictionary.Contains(prefix))
-                {
-                    substrings.Add(prefix);
-                }
-            }
+            return GetSplittedSequences(textWithoutSpaces, validPrefixesList);
+        }
 
-            foreach (var substring in substrings)
+        private IEnumerable<string> GetSplittedSequences(string textWithoutSpaces, IEnumerable<string> validPrefixesList)
+        {
+            var splittedSequences = new List<string>();
+            foreach (var prefix in validPrefixesList)
             {
-                int len = substring.Length;
-                string rest = text.Substring(len);
-                if (len == text.Length)
+                int len = prefix.Length;
+                if (len == textWithoutSpaces.Length)
                 {
-                    subtexts.Add(substring);
+                    splittedSequences.Add(prefix);
                 }
                 else
                 {
-                    var nextSubtexts = SplitText(rest);
-                    foreach (var nextSubtext in nextSubtexts)
-                    {
-                        subtexts.Add(string.Format("{0} {1}", substring, nextSubtext));
-                    }
+                    string suffix = textWithoutSpaces.Substring(len);
+                    ConcatPrefixWithSubsequences(prefix, suffix, splittedSequences);
                 }
             }
 
-            return subtexts;
+            return splittedSequences;
+        }
+
+        private void ConcatPrefixWithSubsequences(string prefix, string suffix, IList<string> validWordsList)
+        {
+            var validWordsSequencesForSuffix = SplitText(suffix);
+            foreach (var wordsSequence in validWordsSequencesForSuffix)
+            {
+                validWordsList.Add(string.Format("{0} {1}", prefix, wordsSequence));
+            }
+        }
+
+        private List<string> GetValidPrefixesList(string textWithoutSpaces)
+        {
+            var validPrefixesList = new List<string>();
+            for (int i = 1; i <= textWithoutSpaces.Length; i++)
+            {
+                string prefix = textWithoutSpaces.Substring(0, i);
+                if (_dictionary.Contains(prefix))
+                {
+                    validPrefixesList.Add(prefix);
+                }
+            }
+            return validPrefixesList;
         }
     }
 }

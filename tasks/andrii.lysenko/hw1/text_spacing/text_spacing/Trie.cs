@@ -1,19 +1,12 @@
 ﻿namespace text_spacing
 {
-    public enum NodeExistance
-    {
-        NotExists,
-        IsTransit,
-        IsWord
-    }
-
     public class Trie
     {
         private readonly TrieNode _root;
 
         public Trie()
         {
-            _root = new TrieNode {IsWord = false, Key = ""};
+            _root = new TrieNode {IsLeaf = false, Key = ""};
         }
 
         public void Add(string key)
@@ -34,9 +27,9 @@
             {
                 if (child.Key == symbol)
                 {
-                    if (key.Length == 1)
+                    if (KeyIsLastSymbol(key))
                     {
-                        return child.IsWord ? NodeExistance.IsWord : NodeExistance.IsTransit;
+                        return child.IsLeaf ? NodeExistance.IsWord : NodeExistance.IsTransit;
                     }
                     return Contains(child, rest);
                 }
@@ -54,9 +47,9 @@
             {
                 if (child.Key == symbol)
                 {
-                    if (key.Length == 1)
+                    if (KeyIsLastSymbol(key))
                     {
-                        child.IsWord = true;
+                        child.IsLeaf = true;
                         return;
                     }
                     Add(child, rest);
@@ -64,12 +57,17 @@
                 }
             }
 
-            var newNode = new TrieNode {IsWord = key.Length == 1, Key = symbol};
+            var newNode = new TrieNode {IsLeaf = KeyIsLastSymbol(key), Key = symbol};
             node.AddChild(newNode);
-            if (key.Length != 1)
+            if (KeyIsLastSymbol(key))
             {
                 Add(newNode, rest);
             }
+        }
+
+        private bool KeyIsLastSymbol(string key)
+        {
+            return key.Length == 1;
         }
     }
 }

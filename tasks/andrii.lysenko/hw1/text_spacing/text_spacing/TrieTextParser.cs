@@ -25,10 +25,44 @@ namespace text_spacing
             }
         }
 
-        public IEnumerable<string> SplitText(string text)
+        public IEnumerable<string> SplitText(string textWithoutSpaces)
         {
-            var subtexts = new List<string>();
-            var substrings = new List<string>();
+            var validPrefixesList = GetValidPrefixesList(textWithoutSpaces);
+
+            return GetSplittedSequenes(textWithoutSpaces,validPrefixesList);
+        }
+
+        private IEnumerable<string> GetSplittedSequenes(string textWithoutSpaces, IEnumerable<string> validPrefixesList)
+        {
+            var splittedSequences = new List<string>();
+            foreach (var prefix in validPrefixesList)
+            {
+                int len = prefix.Length;
+                string suffix = textWithoutSpaces.Substring(len);
+                if (len == textWithoutSpaces.Length)
+                {
+                    splittedSequences.Add(prefix);
+                }
+                else
+                {
+                    ConcatPrefixWithSubsequences(prefix, suffix, splittedSequences);
+                }
+            }
+
+            return splittedSequences;
+        }
+        private void ConcatPrefixWithSubsequences(string prefix, string suffix, IList<string> validWordsList)
+        {
+            var validWordsSequencesForSuffix = SplitText(suffix);
+            foreach (var wordsSequence in validWordsSequencesForSuffix)
+            {
+                validWordsList.Add(string.Format("{0} {1}", prefix, wordsSequence));
+            }
+        }
+
+        private List<string> GetValidPrefixesList(string text)
+        {
+            var validPrefixesList = new List<string>();
 
             for (int i = 1; i <= text.Length; i++)
             {
@@ -36,7 +70,7 @@ namespace text_spacing
                 var prefixExistance = _trie.Contains(key);
                 if (prefixExistance == NodeExistance.IsWord)
                 {
-                    substrings.Add(key);
+                    validPrefixesList.Add(key);
                 }
                 else if (prefixExistance == NodeExistance.NotExists)
                 {
@@ -44,24 +78,7 @@ namespace text_spacing
                 }
             }
 
-            foreach (var substring in substrings)
-            {
-                if (substring.Length == text.Length)
-                {
-                    subtexts.Add(substring);
-                }
-                else
-                {
-                    string rest = text.Substring(substring.Length);
-                    var nextSubtexts = SplitText(rest);
-                    foreach (var nextSubtext in nextSubtexts)
-                    {
-                        subtexts.Add(string.Format("{0} {1}", substring, nextSubtext));
-                    }
-                }
-            }
-
-            return subtexts;
+            return validPrefixesList;
         }
     }
 }
