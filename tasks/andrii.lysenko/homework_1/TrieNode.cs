@@ -10,7 +10,7 @@ namespace text_spacing
     {
         private readonly List<TrieNode> _children = new List<TrieNode>();
         public string Key { get; set; }
-        public bool IsLeaf { get; set; }
+        public bool IsWord { get; set; }
 
         public List<TrieNode> Children
         {
