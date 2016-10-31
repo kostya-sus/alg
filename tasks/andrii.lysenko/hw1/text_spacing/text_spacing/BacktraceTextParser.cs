@@ -9,6 +9,12 @@ namespace text_spacing
 {
     public class BacktraceTextParser : ITextParser
     {
+        private struct PrefixFilterResults
+        {
+            public bool IsWord { get; set; }
+            public List<string> Prefixes { get; set; }
+        }
+
         private string[] _dictionary;
 
         public void ReadDictionary(string path)
@@ -28,25 +34,22 @@ namespace text_spacing
 
             string prefix = text.Substring(0, 1);
 
-            List<string> wordsWithPrefix = GetAllWordsWithPrefix(prefix, _dictionary);
+            var prefixFiltered = FilterByPrefix(prefix, _dictionary);
             int len = 2;
 
             var substrings = new List<string>();
-            while (wordsWithPrefix.Any())
+            while (prefixFiltered.Prefixes.Any())
             {
-                foreach (var word in wordsWithPrefix)
+                if (prefixFiltered.IsWord)
                 {
-                    if (prefix.Length == word.Length)
-                    {
-                        substrings.Add(prefix);
-                        break;
-                    }
+                    substrings.Add(prefix);
                 }
+
                 if (len == text.Length + 1) break;
 
                 prefix = text.Substring(0, len++);
 
-                wordsWithPrefix = GetAllWordsWithPrefix(prefix, wordsWithPrefix);
+                prefixFiltered = FilterByPrefix(prefix, prefixFiltered.Prefixes);
             }
 
             foreach (var substring in substrings)
@@ -70,19 +73,26 @@ namespace text_spacing
             return subtexts;
         }
 
-        private List<string> GetAllWordsWithPrefix(string prefix, IEnumerable<string> dictionary)
+        private PrefixFilterResults FilterByPrefix(string prefix, IEnumerable<string> dictionary)
         {
-            var wordsWithGivenPrefix = new List<string>();
+            var result = new PrefixFilterResults {Prefixes = new List<string>()};
 
             foreach (var word in dictionary)
             {
                 if (word.StartsWith(prefix))
                 {
-                    wordsWithGivenPrefix.Add(word);
+                    if (word.Length == prefix.Length)
+                    {
+                        result.IsWord = true;
+                    }
+                    else
+                    {
+                        result.Prefixes.Add(word);
+                    }
                 }
             }
 
-            return wordsWithGivenPrefix;
+            return result;
         }
     }
 }
