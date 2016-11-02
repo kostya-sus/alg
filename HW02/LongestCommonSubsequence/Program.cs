@@ -10,6 +10,9 @@ namespace LongestCommonSubsequence
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("---------- Find Longest Common Subsequence! ----------");
+            Console.WriteLine("\nLines are interpreted as an array of characters!\n");
+
             Console.Write("Enter sequence 1: ");
             string sequence1 = Console.ReadLine();
 
@@ -17,7 +20,8 @@ namespace LongestCommonSubsequence
             string sequence2 = Console.ReadLine();
 
             string LCS = LongestCommonSubsequence.GetLCS(sequence1, sequence2);
-            Console.WriteLine("LCS: {0}", LCS);
+
+            Console.WriteLine("\nLongest Common Subsequence (LCS): {0}", LCS);
             Console.ReadLine();
         }
     }
