@@ -89,6 +89,7 @@ namespace LCS
 
         static void Main(string[] args)
         {
+            Console.WriteLine("This program finds the longest common subsequences in two sequences. Sequences are interpreted as characters array.");
             Console.WriteLine("Enter two sequences:");
             var x = ' ' + Console.ReadLine();
             var y = ' ' + Console.ReadLine();
