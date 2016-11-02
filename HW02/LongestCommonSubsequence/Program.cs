@@ -17,7 +17,6 @@ namespace LongestCommonSubsequence
             string sequence2 = Console.ReadLine();
 
             string LCS = LongestCommonSubsequence.GetLCS(sequence1, sequence2);
-
             Console.WriteLine("LCS: {0}", LCS);
             Console.ReadLine();
         }

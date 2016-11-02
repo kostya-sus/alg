@@ -156,3 +156,13 @@ $RECYCLE.BIN/
 
 *.VC.opendb
 *.VC.db
+
+#.config & .csproj
+*.config
+*.csproj
+
+#Solution
+*.sln
+
+#Assembly info
+AssemblyInfo.cs

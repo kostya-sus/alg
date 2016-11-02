@@ -8,75 +8,93 @@ namespace LongestCommonSubsequence
 {
     public static class LongestCommonSubsequence
     {
+        private static string _sequence1;
+        private static string _sequence2;
+        private static string _lcs;
+
+        private static int[,] _lengths;
+
         public static string GetLCS(string sequence1, string sequence2)
         {
-            int n = sequence1.Length;
-            int m = sequence2.Length;
-            string subSequence = "";
-
-            int[,] matrixLengths = MatrixLengths(sequence1, sequence2);
-
-            for (int i = n; i >= 1; i--)
+            if (string.IsNullOrEmpty(sequence1) || string.IsNullOrEmpty(sequence2))
             {
-                for (int j = m; j >= 1;)
-                {
-                    if (sequence1[i - 1] == sequence2[j - 1])
-                    {
-                        subSequence = sequence1[i - 1] + subSequence;
-                        m--;
-                    }
-                    else if(matrixLengths[i, j - 1] > matrixLengths[i - 1, j])
-                    {
-                        j = --m;
-                        continue;
-                    }
-
-                    break;
-                }
+                throw new ArgumentNullException();
             }
 
-            return subSequence;
+            _sequence1 = sequence1;
+            _sequence2 = sequence2;
+
+            FillMatrixLengths();
+            GetLCS();
+
+            return _lcs;
         }
 
 
-        private static int[,] MatrixLengths(string sequence1, string sequence2)
+        private static void FillMatrixLengths()
         {
-            int n = sequence1.Length;
-            int m = sequence2.Length;
+            int n = _sequence1.Length;
+            int m = _sequence2.Length;
 
-            int[,] matrix = new int[n + 1, m + 1];
+            _lengths = new int[n + 1, m + 1];
 
             for (int i = 0; i <= m; i++)
             {
-                matrix[0, i] = 0;
+                _lengths[0, i] = 0;
             }
 
             for (int i = 0; i <= n; i++)
             {
-                matrix[i, 0] = 0;
+                _lengths[i, 0] = 0;
             }
 
             for (int i = 1; i <= n; i++)
             {
                 for (int j = 1; j <= m; j++)
                 {
-                    if (sequence1[i - 1] == sequence2[j - 1])
+                    if (_sequence1[i - 1] == _sequence2[j - 1])
                     {
-                        matrix[i, j] = matrix[i - 1, j - 1] + 1;
+                        _lengths[i, j] = _lengths[i - 1, j - 1] + 1;
                     }
                     else
                     {
-                        matrix[i, j] = Max(matrix[i - 1, j], matrix[i, j - 1]);
+                        _lengths[i, j] = Max(_lengths[i - 1, j], _lengths[i, j - 1]);
                     }
                 }
             }
-
-            return matrix;
         }
 
-        private static int Max(int int1, int int2)
+        private static int Max(int num1, int num2)
         {
-            return int1 > int2 ? int1 : int2;
+            return num1 > num2 ? num1 : num2;
+        }
+
+        private static void GetLCS()
+        {
+            int n = _sequence1.Length;
+            int m = _sequence2.Length;
+            
+            _lcs = "";
+
+            for (int i = n; i > 0; i--)
+            {
+                for (int j = m; j > 0;)
+                {
+                    if (_lengths[i, j] == _lengths[i, j - 1])
+                    {
+                        j = --m;
+                        continue;
+                    }
+
+                    if (_lengths[i, j] != _lengths[i - 1, j])
+                    {
+                        _lcs = _sequence1[i - 1] + _lcs;
+                        --m;
+                    }
+
+                    break;
+                }
+            }
         }
     }
 }
