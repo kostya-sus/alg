@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MED
 {
@@ -24,10 +20,16 @@ namespace MED
 
             Console.WriteLine("\n\n---------- Result ----------");
             Console.WriteLine("MED: {0}", MinimumEditDistance.GetMED);
-            Console.WriteLine("\nEditing:\n{0}\n{1}", sequence2, MinimumEditDistance.GetEditLine);
+
+            var pairsOfLetters = MinimumEditDistance.GetPairsOfLetters;
+            Console.WriteLine("#nSequence alignment:");
+            for (int i = pairsOfLetters.Count - 1; i >= 0; i--)
+            {
+                var pair = pairsOfLetters[i];
+                Console.Write("{0} {1}\n", pair[0], pair[1]);
+            }
 
             var operations = MinimumEditDistance.GetOperations;
-
             Console.WriteLine("\nOperations by sequence 1:");
             foreach (var operation in operations)
             {

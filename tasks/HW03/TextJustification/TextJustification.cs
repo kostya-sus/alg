@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TextJustification
 {
@@ -51,14 +46,7 @@ namespace TextJustification
             {
                 for (int j = i; j < n; j++)
                 {
-                    if (_cost[i, j] < 0)
-                    {
-                        _cost[i, j] = int.MaxValue;
-                    }
-                    else
-                    {
-                        _cost[i, j] = (int)Math.Pow(_cost[i, j], 2);
-                    }
+                    _cost[i, j] = _cost[i, j] < 0 ? int.MaxValue : (int) Math.Pow(_cost[i, j], 3);
                 }
             }
         }
