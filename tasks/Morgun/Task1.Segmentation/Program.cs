@@ -1,93 +1,233 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+
+//Dictionary file should be in executable directory with .txt format
+//Input file should also be there with one string per line with no spaces or other delimeter characters
 
 namespace WordDelimeter
 {
     class Program
     {
         private const string DefaultDictPath = "dict_en.txt";
-        //private const string DefaultCheckString = "iamace";
-        //private const string DefaultCheckString = "helloworld";
+
+        private const string DefaultInputPath = "input.txt";
+        private const string DefaultOutputName = "output";
+        private const string DefaultOutputFormat = "txt";
+
         private const string DefaultCheckString = "catsanddog";
-        //private const string DefaultCheckString = "goodluck";
-        //private const string DefaultCheckString = "seesunweather";
-        //private const string DefaultCheckString = "tellmethetruth";
-        private static List<String> _sentences;
 
-        static void Main(string[] args)
+        private const int MaxSentenceCountInOneBuffer = 100000;
+
+        private static int _currentInputString = 0;
+        private static bool _isOverSized = false;
+        private static string _outputPath;
+
+        static void Main()
         {
-            Stopwatch timeMeasure = new Stopwatch();
+            var inputDictionary = LoadDictionary(DefaultDictPath);
+            var inputText = LoadInputText(DefaultInputPath);
+            var timeMeasure = new Stopwatch();
 
-            Console.WriteLine("The input string is: ", DefaultCheckString);
-  
-            timeMeasure.Start();
-            _sentences = BreakWords(DefaultCheckString, Dictionary.Load(DefaultDictPath), _sentences);
-            timeMeasure.Stop();
+            if(inputDictionary.Count == 0)
+            {
+                Console.WriteLine("Dictionary has no words. Fill it with one word per line and try again.\n(File: {0})", DefaultDictPath);
+                Console.ReadLine();
+                return;
+            }
 
-            Console.WriteLine("Possible space positions are ({0} total count): \n", _sentences.Count);
-            PrintSentences(_sentences);
-            Console.WriteLine("\nWith {0} ms passed", timeMeasure.ElapsedMilliseconds);
+            for (int i = 0; i < inputText.Count; i++)
+            {
+                Console.WriteLine("The input string is: {0}", inputText[i]);
+
+                _currentInputString = i;
+                _isOverSized = false;
+                _outputPath = string.Format("{0}_{1}.{2}", DefaultOutputName, _currentInputString, DefaultOutputFormat);
+
+                if(File.Exists(_outputPath))
+                {
+                    File.Delete(_outputPath);
+                }
+
+                if (inputDictionary.Contains(inputText[i]))
+                {
+                    Console.WriteLine("output string is: {0}", inputText[i]);
+                    continue;
+                }
+
+                var sentences = new List<string>();
+
+                timeMeasure.Reset();
+                timeMeasure.Start();
+                BreakWords(inputText[i], inputDictionary, sentences);
+                timeMeasure.Stop();
+
+                if (sentences.Count != 0)
+                { 
+
+                    Console.WriteLine("Possible space positions are ({0} total count):", sentences.Count);
+                    Console.WriteLine("See output_{0}.txt for found combinations", _currentInputString);
+
+                    if(!_isOverSized)
+                    {
+                        WriteOutput(sentences, _outputPath);
+                    }
+
+                    Console.WriteLine("Used time: {0} ms \n", timeMeasure.ElapsedMilliseconds);
+                }
+                else
+                {
+                    Console.WriteLine("Input string can't be broken.\n");
+                }
+            }
             Console.ReadLine();
         }
 
-        static List<String> BreakWords(string input, HashSet<String> dictionary, List<String> sentences)
+        static void BreakWords(string input, HashSet<String> dictionary, List<String> sentences)
         {
-            var wordList = new List<String>[input.Length + 1];
-            wordList[0] = new List<String>();
+            var Dp = new int[input.Length, input.Length+1];
 
             for (int i = 0; i < input.Length; i++)
             {
                 for (int j = i + 1; j <= input.Length; j++)
                 {
                     var prefix = input.Substring(i, j-i);
-                    if (dictionary.Contains(prefix))
+                    Dp[i, j] = dictionary.Contains(prefix) ? prefix.Length : 0;
+                }
+            }
+
+            try
+            {
+                CompleteSentences(0, Dp, Dp.GetLength(0), Dp.GetLength(1), input, sentences, "");
+            }
+            catch(OutOfMemoryException outOfMemory)
+            {
+                Console.WriteLine("{0}. In output not all combinations are present.", outOfMemory.Message);
+            }
+        }
+
+        static void CompleteSentences(int currentRow, int[,] Dp, int row, int col, string input, List<string> sentences, string sentence)
+        {
+            for (int i = currentRow; i < row; )
+            {
+                for(int j = i + 1; j < col; j++)
+                {
+                    if(Dp[i,j] != 0)
                     {
-                        if (wordList[j] == null)
+                        var word = input.Substring(i, Dp[i, j]);
+                        var length = (sentence + word).Replace(" ", string.Empty).Length;
+
+                        if (input.Length <= length)
                         {
-                            wordList[j] = new List<String>();
+                            sentence += word;
+                            sentences.Add(sentence);
+
+                            //If maximum number reached, write to output and continue
+                            if(sentences.Count == MaxSentenceCountInOneBuffer)
+                            {
+                                WriteOutputAppend(sentences, _outputPath);
+                                _isOverSized = true;
+                                sentences.Clear();
+                            }
+                            return;
                         }
-                        wordList[j].Add(prefix);
+                        else
+                        {
+                            CompleteSentences(length, Dp, row, col, input, sentences, sentence + word + " ");
+                        }
+                    }
+                }
+                return;
+            }
+        }
+
+        static List<string> LoadInputText(string path)
+        {
+            var inputText = new List<string>();
+
+            if (!File.Exists(path))
+            {
+                inputText.Add(DefaultCheckString);
+                return inputText;
+            }
+
+            using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
+            {
+                using (StreamReader streamReader = new StreamReader(fileStream))
+                {
+                    
+                    string readLine = streamReader.ReadLine();
+
+                    while (readLine != null)
+                    {   
+                        inputText.Add(readLine);
+                        readLine = streamReader.ReadLine();
+                    } 
+                }
+            }
+            return inputText;
+        }
+
+        static void WriteOutput(List<string> sentence, string path)
+        {
+            using (FileStream fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+            {
+                using (StreamWriter streamWriter = new StreamWriter(fileStream))
+                {
+                    for(int i=0; i<sentence.Count; i++)
+                    {
+                        try
+                        {
+                            streamWriter.WriteLine(sentence[i]);
+                        }
+                        catch (OutOfMemoryException)
+                        {
+                            break;
+                        }
                     }
                 }
             }
-
-            sentences = new List<String>();
-            CompleteSentences(wordList, sentences, new List<String>(), input.Length);
-
-            return sentences;
         }
 
-        static void CompleteSentences(List<String>[] wordList, List<String> sentences, List<String> temporary, int index)
+        static void WriteOutputAppend(List<string> sentence, string path)
         {
-            if(index <= 0)
+            using (FileStream fileStream = new FileStream(path, FileMode.Append, FileAccess.Write, FileShare.None))
             {
-                var sentenceBuild = temporary[temporary.Count - 1];
-                for(int i=temporary.Count - 2; i>=0; i--)
+                using (StreamWriter streamWriter = new StreamWriter(fileStream))
                 {
-                    sentenceBuild += String.Format(" {0}", temporary[i]);
+                    for (int i = 0; i < sentence.Count; i++)
+                    {
+                        try
+                        {
+                            streamWriter.WriteLine(sentence[i]);
+                        }
+                        catch (OutOfMemoryException)
+                        {
+                            break;
+                        }
+                    }
                 }
-                sentences.Add(sentenceBuild);
-                return;
-            }
-
-            foreach(var word in wordList[index])
-            {
-                temporary.Add(word);
-                CompleteSentences(wordList, sentences, temporary, index - word.Length);
-                temporary.RemoveAt(temporary.Count - 1);
             }
         }
 
-        static void PrintSentences(List<String> sentences)
+        static HashSet<string> LoadDictionary(string fullPath)
         {
-            foreach(var sentence in sentences)
+            var dictionary = new HashSet<string>();
+
+            using (FileStream fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None))
             {
-                Console.WriteLine(sentence);
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    string word = sr.ReadLine();
+                    while (word != null)
+                    {
+                        dictionary.Add(word);
+                        word = sr.ReadLine();
+                    }
+                }
             }
+            return dictionary;
         }
 
     }
