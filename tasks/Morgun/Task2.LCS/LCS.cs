@@ -125,20 +125,6 @@ namespace LCS
             return;
         }
 
-        private string ReversePath(string str)
-        {
-            var reversedStr = string.Empty;
-
-            string[] parts = str.Trim().Split(' ');
-
-            for(int i=parts.Length-1; i>=0; i--)
-            {
-                reversedStr += parts[i] + " ";
-            }
-
-            return reversedStr;
-        }
-
         private void LoadInputSequences(string path)
         {
             var sequences = new List<int[]>();
