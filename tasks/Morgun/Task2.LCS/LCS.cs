@@ -34,14 +34,14 @@ namespace LCS
 
         public string OneOfLCS
         {
-            get { return ReversePath(_tableLcsPath); }
+            get { return _tableLcsPath; }
         }
 
         public LCS(string path)
         {
             LoadInputSequences(path);
             _tableLcs = new int[_firstSequence.Length + 1, _secondSequence.Length + 1];
-            FillTableLCS(_firstSequence, SecondSequence);
+            FillTableLCS(_firstSequence, _secondSequence);
             FindLCSPath(_tableLcs, _firstSequence, _secondSequence, _firstSequence.Length, _secondSequence.Length);
         }
 
@@ -107,7 +107,7 @@ namespace LCS
             {
                 if (X[i-1] == Y[j-1])
                 {
-                    _tableLcsPath += X[i-1] + " ";
+                    _tableLcsPath = string.Format("{0} {1}",X[i-1], _tableLcsPath);
                     FindLCSPath(tableLCS, X, Y, --i, --j);
                 }
                 else
