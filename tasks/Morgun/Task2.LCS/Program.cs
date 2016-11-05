@@ -22,8 +22,7 @@ namespace LCS
             Console.WriteLine("The result table: \n");
             lcs.PrintTable();
 
-            Console.Write("The longest path is in [m,n] cell, ");
-            Console.WriteLine("where m - length of first sequence, n - length of second");
+            Console.WriteLine("The longest path is in [m,n] cell, where m - length of first sequence, n - length of second");
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("LCS (max count) is {0}", lcs.MaxLCS);
