@@ -8,7 +8,7 @@ namespace LCS
         {
             var str1 = "fsdfsdgfhgd";
             var str2 = "dfsdfsdgsdf";
-            var result = LongestCommonSubsequence.FindLcs(str1.ToCharArray(), str2.ToCharArray());
+            var result = LongestCommonSubsequence.FindLcs(str1, str2);
 
             Console.WriteLine(result);
         }
