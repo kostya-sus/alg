@@ -9,12 +9,13 @@ namespace LCSTests
         public void ShouldReturnWholeStringIfStringsAreEquals()
         {
             //Arrange
-            string str1 = "abcdef";
-            string str2 = "abcdef";
-            string expectedResult = "abcdef";
+            string str1 = "a b c d e f";
+            string str2 = "a b c d e f";
+            string expectedResult = "a b c d e f";
 
             //Act
-            var result = LongestCommonSubsequence.FindLcs(str1.ToCharArray(),str2.ToCharArray());
+            var result = LongestCommonSubsequence.FindLcs(str1.Split(' '),str2.Split(' '));
+            result = result.Remove(result.Length - 1);
 
             //Assert
             Assert.Equal(expectedResult, result);
@@ -25,11 +26,12 @@ namespace LCSTests
         {
             //Arrange
             string str1 = "";
-            string str2 = "abcdef";
+            string str2 = "a b c d e f";
             string expectedResult = "";
 
             //Act
-            var result = LongestCommonSubsequence.FindLcs(str1.ToCharArray(), str2.ToCharArray());
+            var result = LongestCommonSubsequence.FindLcs(str1.Split(' '), str2.Split(' '));
+            result = result.Remove(result.Length - 1);
 
             //Assert
             Assert.Equal(expectedResult, result);
@@ -39,12 +41,13 @@ namespace LCSTests
         public void ShouldReturnTheBiggestSubstringIfStringHasCommonSubstrings()
         {
             //Arrange
-            string str1 = "fsdfsdgfhgd";
-            string str2 = "dfsdfsdgsdf";
-            string expectedResult = "fsdfsdgf";
+            string str1 = "f s d f s d g f h g d";
+            string str2 = "d f s d f s d g s d f";
+            string expectedResult = "f s d f s d g f";
 
             //Act
-            var result = LongestCommonSubsequence.FindLcs(str1.ToCharArray(), str2.ToCharArray());
+            var result = LongestCommonSubsequence.FindLcs(str1.Split(' '), str2.Split(' '));
+            result = result.Remove(result.Length - 1);
 
             //Assert
             Assert.Equal(expectedResult, result);

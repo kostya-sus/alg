@@ -4,7 +4,7 @@ namespace LCS
 {
     public static class LongestCommonSubsequence
     {
-        public static string FindLcs(string str1, string str2)
+        public static string FindLcs(string[] str1, string[] str2)
         {
             int[,] dp = new int[str1.Length + 1, str2.Length + 1];
 
@@ -26,7 +26,7 @@ namespace LCS
             return ReturnSubsequence(dp, str1, str2, str1.Length, str2.Length);
         }
 
-        private static string ReturnSubsequence(int[,] dp, string str1, string str2, int length1,
+        private static string ReturnSubsequence(int[,] dp, string[] str1, string[] str2, int length1,
             int length2)
         {
             string commonSubsequenence = "";
@@ -39,7 +39,7 @@ namespace LCS
             if (str1[length1 - 1] == str2[length2 - 1])
             {
                 commonSubsequenence = ReturnSubsequence(dp, str1, str2, length1 - 1, length2 - 1);
-                commonSubsequenence += str1[length1 - 1];
+                commonSubsequenence += str1[length1 - 1]+ " ";
                 
                 return commonSubsequenence;
             }
@@ -53,6 +53,7 @@ namespace LCS
             {
                 return ReturnSubsequence(dp, str1, str2, length1, length2 - 1);
             }
+
             return commonSubsequenence;
         }
     }
