@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StringParser
 {
-    class Dictionary
+    class DictionaryDeserialization
     {
         public string[] GetWords()
         {
