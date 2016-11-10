@@ -1,93 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+//Dictionary file should be in executable directory with .txt format
+//Input file should also be there with one string per line with no spaces or other delimeter characters
 
 namespace WordDelimeter
 {
     class Program
     {
         private const string DefaultDictPath = "dict_en.txt";
-        //private const string DefaultCheckString = "iamace";
-        //private const string DefaultCheckString = "helloworld";
+        private const string DefaultInputPath = "input.txt";
+        private const string DefaultOutputName = "output";
+        private const string DefaultOutputFormat = "txt";
         private const string DefaultCheckString = "catsanddog";
-        //private const string DefaultCheckString = "goodluck";
-        //private const string DefaultCheckString = "seesunweather";
-        //private const string DefaultCheckString = "tellmethetruth";
-        private static List<String> _sentences;
 
-        static void Main(string[] args)
+        static void Main()
         {
-            Stopwatch timeMeasure = new Stopwatch();
+            var wordDelimeter = new WordDelimeter(new Dictionary(DefaultDictPath));
+            var inputText = DataManager.ReadLinesFromFile(DefaultInputPath);
+            var timeMeasure = new Stopwatch();
+            var sentencesComplete = new List<string>();
 
-            Console.WriteLine("The input string is: ", DefaultCheckString);
-  
-            timeMeasure.Start();
-            _sentences = BreakWords(DefaultCheckString, Dictionary.Load(DefaultDictPath), _sentences);
-            timeMeasure.Stop();
+            for (int i = 0; i < inputText.Count; i++)
+            {
+                Console.WriteLine("The input string is: {0}", inputText[i]);
+                var outputPath = string.Format("{0}_{1}.{2}", DefaultOutputName, i, DefaultOutputFormat);
 
-            Console.WriteLine("Possible space positions are ({0} total count): \n", _sentences.Count);
-            PrintSentences(_sentences);
-            Console.WriteLine("\nWith {0} ms passed", timeMeasure.ElapsedMilliseconds);
+                timeMeasure.Start();
+                sentencesComplete = wordDelimeter.GetSentences(inputText[i], outputPath);
+                timeMeasure.Stop();
+                Console.WriteLine("Total count of combinations: {0}. Time elapsed (ms): {1}.", wordDelimeter.CombinationCount, timeMeasure.ElapsedMilliseconds);
+                Console.WriteLine("Output file is: {0}\n", outputPath);
+
+                if(!wordDelimeter.OverSized)
+                {
+                    DataManager.WriteOutput(sentencesComplete, outputPath);
+                }
+                timeMeasure.Reset();
+
+            }
+            Console.WriteLine("It works!");
             Console.ReadLine();
-        }
-
-        static List<String> BreakWords(string input, HashSet<String> dictionary, List<String> sentences)
-        {
-            var wordList = new List<String>[input.Length + 1];
-            wordList[0] = new List<String>();
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                for (int j = i + 1; j <= input.Length; j++)
-                {
-                    var prefix = input.Substring(i, j-i);
-                    if (dictionary.Contains(prefix))
-                    {
-                        if (wordList[j] == null)
-                        {
-                            wordList[j] = new List<String>();
-                        }
-                        wordList[j].Add(prefix);
-                    }
-                }
-            }
-
-            sentences = new List<String>();
-            CompleteSentences(wordList, sentences, new List<String>(), input.Length);
-
-            return sentences;
-        }
-
-        static void CompleteSentences(List<String>[] wordList, List<String> sentences, List<String> temporary, int index)
-        {
-            if(index <= 0)
-            {
-                var sentenceBuild = temporary[temporary.Count - 1];
-                for(int i=temporary.Count - 2; i>=0; i--)
-                {
-                    sentenceBuild += String.Format(" {0}", temporary[i]);
-                }
-                sentences.Add(sentenceBuild);
-                return;
-            }
-
-            foreach(var word in wordList[index])
-            {
-                temporary.Add(word);
-                CompleteSentences(wordList, sentences, temporary, index - word.Length);
-                temporary.RemoveAt(temporary.Count - 1);
-            }
-        }
-
-        static void PrintSentences(List<String> sentences)
-        {
-            foreach(var sentence in sentences)
-            {
-                Console.WriteLine(sentence);
-            }
         }
 
     }

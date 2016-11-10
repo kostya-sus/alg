@@ -1,36 +1,49 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace WordDelimeter
 {
-    public static class Dictionary
+    public class Dictionary
     {
-        public static HashSet<String> Load(string fullPath)
+        private HashSet<string> _wordSet;
+
+        public HashSet<string> WordSet
         {
-            if(!File.Exists(fullPath))
+            get { return _wordSet; }
+        }
+
+        public Dictionary(string sourcePath)
+        {
+            _wordSet = LoadDictionary(sourcePath);
+            if(_wordSet.Count == 0)
             {
-                throw new FileNotFoundException();
+                throw new Exception("Dictionary can't be empty!");
             }
+        }
 
-            HashSet<String> _dictionary = new HashSet<String>();
+        public bool Contains(string value)
+        {
+            return _wordSet.Contains(value);
+        }
 
-            using (FileStream fs = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.None))
-            { 
+        private HashSet<string> LoadDictionary(string fullPath)
+        {
+            var dictionary = new HashSet<string>();
+
+            using (FileStream fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None))
+            {
                 using (StreamReader sr = new StreamReader(fs))
                 {
                     string word = sr.ReadLine();
-                    while(word != null)
+                    while (word != null)
                     {
-                        _dictionary.Add(word);
+                        dictionary.Add(word);
                         word = sr.ReadLine();
                     }
                 }
             }
-            return _dictionary;
+            return dictionary;
         }
     }
 }
