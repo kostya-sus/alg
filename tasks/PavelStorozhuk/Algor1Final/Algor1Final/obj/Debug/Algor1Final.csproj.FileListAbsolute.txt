@@ -1,0 +1,6 @@
+c:\users\user\documents\visual studio 2013\Projects\Algor1Final\Algor1Final\bin\Debug\Algor1Final.exe.config
+c:\users\user\documents\visual studio 2013\Projects\Algor1Final\Algor1Final\obj\Debug\Algor1Final.csprojResolveAssemblyReference.cache
+c:\users\user\documents\visual studio 2013\Projects\Algor1Final\Algor1Final\bin\Debug\Algor1Final.exe
+c:\users\user\documents\visual studio 2013\Projects\Algor1Final\Algor1Final\bin\Debug\Algor1Final.pdb
+c:\users\user\documents\visual studio 2013\Projects\Algor1Final\Algor1Final\obj\Debug\Algor1Final.exe
+c:\users\user\documents\visual studio 2013\Projects\Algor1Final\Algor1Final\obj\Debug\Algor1Final.pdb

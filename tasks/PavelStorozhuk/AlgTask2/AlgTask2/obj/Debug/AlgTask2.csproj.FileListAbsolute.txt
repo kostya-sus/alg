@@ -1,0 +1,6 @@
+c:\users\user\documents\visual studio 2013\Projects\AlgTask2\AlgTask2\bin\Debug\AlgTask2.exe.config
+c:\users\user\documents\visual studio 2013\Projects\AlgTask2\AlgTask2\bin\Debug\AlgTask2.exe
+c:\users\user\documents\visual studio 2013\Projects\AlgTask2\AlgTask2\bin\Debug\AlgTask2.pdb
+c:\users\user\documents\visual studio 2013\Projects\AlgTask2\AlgTask2\obj\Debug\AlgTask2.csprojResolveAssemblyReference.cache
+c:\users\user\documents\visual studio 2013\Projects\AlgTask2\AlgTask2\obj\Debug\AlgTask2.exe
+c:\users\user\documents\visual studio 2013\Projects\AlgTask2\AlgTask2\obj\Debug\AlgTask2.pdb

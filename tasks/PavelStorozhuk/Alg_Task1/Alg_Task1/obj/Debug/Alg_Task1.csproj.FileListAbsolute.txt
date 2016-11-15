@@ -1,0 +1,12 @@
+c:\users\user\documents\visual studio 2013\Projects\Alg_Task1\Alg_Task1\bin\Debug\Alg_Task1.exe.config
+c:\users\user\documents\visual studio 2013\Projects\Alg_Task1\Alg_Task1\bin\Debug\Alg_Task1.exe
+c:\users\user\documents\visual studio 2013\Projects\Alg_Task1\Alg_Task1\bin\Debug\Alg_Task1.pdb
+c:\users\user\documents\visual studio 2013\Projects\Alg_Task1\Alg_Task1\obj\Debug\Alg_Task1.csprojResolveAssemblyReference.cache
+c:\users\user\documents\visual studio 2013\Projects\Alg_Task1\Alg_Task1\obj\Debug\Alg_Task1.exe
+c:\users\user\documents\visual studio 2013\Projects\Alg_Task1\Alg_Task1\obj\Debug\Alg_Task1.pdb
+C:\Users\1\Downloads\ShkolaSoftheme-master\ShkolaSoftheme-master\alg\Alg_Task1\Alg_Task1\bin\Debug\Alg_Task1.exe.config
+C:\Users\1\Downloads\ShkolaSoftheme-master\ShkolaSoftheme-master\alg\Alg_Task1\Alg_Task1\obj\Debug\Alg_Task1.exe
+C:\Users\1\Downloads\ShkolaSoftheme-master\ShkolaSoftheme-master\alg\Alg_Task1\Alg_Task1\obj\Debug\Alg_Task1.pdb
+C:\Users\1\Downloads\ShkolaSoftheme-master\ShkolaSoftheme-master\alg\Alg_Task1\Alg_Task1\bin\Debug\Alg_Task1.exe
+C:\Users\1\Downloads\ShkolaSoftheme-master\ShkolaSoftheme-master\alg\Alg_Task1\Alg_Task1\bin\Debug\Alg_Task1.pdb
+C:\Users\1\Downloads\ShkolaSoftheme-master\ShkolaSoftheme-master\alg\Alg_Task1\Alg_Task1\obj\Debug\Alg_Task1.csprojResolveAssemblyReference.cache
